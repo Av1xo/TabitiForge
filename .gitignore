@@ -1,0 +1,72 @@
+# ===============================
+# Build
+# ===============================
+
+build/
+cmake-build-*/
+
+
+# ===============================
+# Python
+# ===============================
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+
+# ===============================
+# Shared libraries generated for tests
+# ===============================
+
+*.so
+*.dylib
+*.dll
+
+tests/python/shared_libs/
+
+
+# ===============================
+# IDE / Editor
+# ===============================
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+
+# ===============================
+# OS
+# ===============================
+
+.DS_Store
+Thumbs.db
+
+
+# ===============================
+# CMake
+# ===============================
+
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+_deps/
+
+
+# ===============================
+# Compilation
+# ===============================
+
+*.o
+*.obj
+*.a
+*.lib
+*.exe
