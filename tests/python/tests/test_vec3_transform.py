@@ -91,6 +91,41 @@ def test_vec3_nrotate_normalizes_non_unit_axis():
 
 
 # LERP / ILERP
+def test_vec3_lerp_clamps_t_below_zero():
+    a = Vec3(1.0, 2.0, 3.0)
+    b = Vec3(5.0, 6.0, 7.0)
+
+    result = lib.vec3_lerp(a, b, -1.0)
+
+    assert lib.vec3_eq(result, a)
+
+
+def test_vec3_lerp_clamps_t_above_one():
+    a = Vec3(1.0, 2.0, 3.0)
+    b = Vec3(5.0, 6.0, 7.0)
+
+    result = lib.vec3_lerp(a, b, 2.0)
+
+    assert lib.vec3_eq(result, b)
+
+
+def test_vec3_ilerp_clamps_t_below_zero():
+    a = Vec3(1.0, 2.0, 3.0)
+    b = Vec3(5.0, 6.0, 7.0)
+
+    lib.vec3_ilerp(ctypes.byref(a), b, -1.0)
+
+    assert lib.vec3_eq(a, Vec3(1.0, 2.0, 3.0))
+
+
+def test_vec3_ilerp_clamps_t_above_one():
+    a = Vec3(1.0, 2.0, 3.0)
+    b = Vec3(5.0, 6.0, 7.0)
+
+    lib.vec3_ilerp(ctypes.byref(a), b, 2.0)
+
+    assert lib.vec3_eq(a, b)
+    
 def test_vec3_lerp_t_zero():
     a = Vec3(1.0, 2.0, 3.0)
     b = Vec3(5.0, 6.0, 7.0)
@@ -161,6 +196,24 @@ def test_vec3_ilerp_eq_to_lerp():
 
 
 # CLAMP / ICLAMP
+
+def test_vec3_clamp_near_zero_vector():
+    v = Vec3(1e-12, 0.0, 0.0)
+
+    result = lib.vec3_clamp(v, 0.0)
+
+    assert lib.vec3_eq(result, v)
+
+
+def test_vec3_iclamp_near_zero_vector():
+    v = Vec3(1e-12, 0.0, 0.0)
+
+    lib.vec3_iclamp(ctypes.byref(v), 0.0)
+
+    assert v.x == pytest.approx(1e-12)
+    assert v.y == pytest.approx(0.0)
+    assert v.z == pytest.approx(0.0)
+
 def test_vec3_clamp_within_limit_unchanged():
     a = Vec3(1.0, 0.0, 0.0)
 
@@ -218,6 +271,35 @@ def test_vec3_iclamp_within_limit_unchanged():
 
 
 # ABS / IABS
+def test_vec3_abs_each_component_branch():
+    assert lib.vec3_eq(
+        lib.vec3_abs(Vec3(-1.0, 2.0, 3.0)),
+        Vec3(1.0, 2.0, 3.0),
+    )
+
+    assert lib.vec3_eq(
+        lib.vec3_abs(Vec3(1.0, -2.0, 3.0)),
+        Vec3(1.0, 2.0, 3.0),
+    )
+
+    assert lib.vec3_eq(
+        lib.vec3_abs(Vec3(1.0, 2.0, -3.0)),
+        Vec3(1.0, 2.0, 3.0),
+    )
+
+def test_vec3_iabs_each_component_branch():
+    v = Vec3(-1.0, 2.0, 3.0)
+    lib.vec3_iabs(ctypes.byref(v))
+    assert lib.vec3_eq(v, Vec3(1.0, 2.0, 3.0))
+
+    v = Vec3(1.0, -2.0, 3.0)
+    lib.vec3_iabs(ctypes.byref(v))
+    assert lib.vec3_eq(v, Vec3(1.0, 2.0, 3.0))
+
+    v = Vec3(1.0, 2.0, -3.0)
+    lib.vec3_iabs(ctypes.byref(v))
+    assert lib.vec3_eq(v, Vec3(1.0, 2.0, 3.0))
+
 def test_vec3_abs_basic():
     a = Vec3(-1.0, 2.0, -3.0)
 

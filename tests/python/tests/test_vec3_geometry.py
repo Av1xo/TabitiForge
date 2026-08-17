@@ -175,6 +175,21 @@ def test_vec3_norm_basic():
     assert result.z == pytest.approx(0.0)
 
 
+def test_vec3_norm_zero_vector():
+    result = lib.vec3_norm(VEC3_ZERO)
+
+    assert lib.vec3_eq(result, VEC3_ZERO)
+
+
+def test_vec3_norm_near_zero_vector():
+    # below the 1e-9 length threshold used internally
+    tiny = Vec3(1e-12, 0.0, 0.0)
+
+    result = lib.vec3_norm(tiny)
+
+    assert lib.vec3_eq(result, VEC3_ZERO)
+
+
 def test_vec3_norm_length_is_one():
     a = Vec3(1.0, 2.0, 3.0)
 
@@ -215,6 +230,20 @@ def test_vec3_inorm_basic():
     assert a.z == pytest.approx(0.0)
     assert lib.vec3_len(a) == pytest.approx(1.0)
 
+
+def test_vec3_inorm_zero_vector():
+    a = Vec3(0.0, 0.0, 0.0)
+
+    lib.vec3_inorm(ctypes.byref(a))
+
+    assert lib.vec3_eq(a, VEC3_ZERO)
+
+def test_vec3_inorm_near_zero_vector():
+    a = Vec3(1e-12, 0.0, 0.0)
+
+    lib.vec3_inorm(ctypes.byref(a))
+
+    assert a.x == pytest.approx(1e-12)
 
 def test_vec3_inorm_eq_to_norm():
     a = Vec3(1.0, 2.0, 3.0)
@@ -401,9 +430,14 @@ def test_vec3_reflect_and_nreflect_diverge_for_non_unit_normal():
     assert nreflect_result.y == pytest.approx(49.0)
 
 
-
-
 # ANGLE_BETWEEN
+def test_vec3_angle_between_zero_vector():
+    assert lib.vec3_angle_between(
+        Vec3(0, 0, 0),
+        Vec3(1, 0, 0)
+    ) == 0.0
+
+
 def test_vec3_angle_between_orthogonal():
     a = Vec3(1.0, 0.0, 0.0)
     b = Vec3(0.0, 1.0, 0.0)
@@ -429,6 +463,19 @@ def test_vec3_angle_between_opposite_direction():
     result = lib.vec3_angle_between(a, b)
 
     assert result == pytest.approx(math.pi)
+
+def test_vec3_angle_between_zero_vector():
+    a = Vec3(1.0, 2.0, 3.0)
+
+    result = lib.vec3_angle_between(a, VEC3_ZERO)
+
+    assert result == pytest.approx(0.0)
+
+
+def test_vec3_angle_between_both_zero_vectors():
+    result = lib.vec3_angle_between(VEC3_ZERO, VEC3_ZERO)
+
+    assert result == pytest.approx(0.0)
 
 
 def test_vec3_angle_between_symmetric():
