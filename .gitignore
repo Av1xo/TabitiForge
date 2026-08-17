@@ -2,6 +2,7 @@
 # Build
 # ===============================
 
+build-coverage/
 build/
 cmake-build-*/
 
@@ -27,6 +28,7 @@ env/
 *.so
 *.dylib
 *.dll
+.coverage
 
 tests/python/shared_libs/
 

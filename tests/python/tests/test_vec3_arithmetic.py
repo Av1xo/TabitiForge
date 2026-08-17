@@ -14,17 +14,9 @@ def test_vec3_add_basic():
     
     result = lib.vec3_add(a, b)
     
-    assert a.x == 1.0
-    assert a.y == 2.0
-    assert a.z == 3.0
-    
-    assert b.x == 4.0
-    assert b.y == 5.0
-    assert b.z == 6.0
-    
-    assert result.x == 5.0
-    assert result.y == 7.0
-    assert result.z == 9.0
+    assert lib.vec3_eq(a, Vec3(1.0, 2.0, 3.0))
+    assert lib.vec3_eq(b, Vec3(4.0, 5.0, 6.0))
+    assert lib.vec3_eq(result, Vec3(5.0, 7.0, 9.0))
 
 def test_vec3_iadd_basic():
     a = Vec3(1.0, 2.0, 3.0)
@@ -32,13 +24,8 @@ def test_vec3_iadd_basic():
     
     lib.vec3_iadd(ctypes.byref(a), b)
     
-    assert a.x == 5.0
-    assert a.y == 7.0
-    assert a.z == 9.0
-    
-    assert b.x == 4.0
-    assert b.y == 5.0
-    assert b.z == 6.0
+    assert lib.vec3_eq(a, Vec3(5.0, 7.0, 9.0))
+    assert lib.vec3_eq(b, Vec3(4.0, 5.0, 6.0))
     
 def test_vec3_add_negative():
     a = Vec3(-1.0, 2.0, -3.0)
@@ -247,3 +234,284 @@ def test_vec3_isub_anti_commutative():
     assert a1.x == -b2.x
     assert a1.y == -b2.y
     assert a1.z == -b2.z
+
+
+# SCALE
+def test_vec3_scale_basic():
+    a = Vec3(1.0, 2.0, 3.0)
+
+    result = lib.vec3_scale(a, 2.0)
+
+    assert a.x == 1.0
+    assert a.y == 2.0
+    assert a.z == 3.0
+
+    assert result.x == 2.0
+    assert result.y == 4.0
+    assert result.z == 6.0
+
+
+def test_vec3_iscale_basic():
+    a = Vec3(1.0, 2.0, 3.0)
+
+    lib.vec3_iscale(ctypes.byref(a), 2.0)
+
+    assert a.x == 2.0
+    assert a.y == 4.0
+    assert a.z == 6.0
+
+
+def test_vec3_scale_zero():
+    a = Vec3(1.0, 2.0, 3.0)
+
+    result = lib.vec3_scale(a, 0.0)
+
+    assert lib.vec3_eq(result, VEC3_ZERO)
+    assert a.x == 1.0
+    assert a.y == 2.0
+    assert a.z == 3.0
+
+
+def test_vec3_iscale_zero():
+    a = Vec3(1.0, 2.0, 3.0)
+
+    lib.vec3_iscale(ctypes.byref(a), 0.0)
+
+    assert lib.vec3_eq(a, VEC3_ZERO)
+
+
+def test_vec3_scale_one():
+    a = Vec3(1.0, 2.0, 3.0)
+
+    result = lib.vec3_scale(a, 1.0)
+
+    assert lib.vec3_eq(result, a)
+
+
+def test_vec3_iscale_one():
+    a = Vec3(1.0, 2.0, 3.0)
+    original = Vec3(1.0, 2.0, 3.0)
+
+    lib.vec3_iscale(ctypes.byref(a), 1.0)
+
+    assert lib.vec3_eq(a, original)
+
+
+def test_vec3_scale_negative():
+    a = Vec3(1.0, -2.0, 3.0)
+
+    result = lib.vec3_scale(a, -1.0)
+
+    assert result.x == -1.0
+    assert result.y == 2.0
+    assert result.z == -3.0
+
+
+def test_vec3_iscale_negative():
+    a = Vec3(1.0, -2.0, 3.0)
+
+    lib.vec3_iscale(ctypes.byref(a), -1.0)
+
+    assert a.x == -1.0
+    assert a.y == 2.0
+    assert a.z == -3.0
+
+
+def test_vec3_scale_double():
+    a = Vec3(1.5, -2.5, 4.0)
+
+    result = lib.vec3_scale(a, 2.0)
+
+    assert result.x == 3.0
+    assert result.y == -5.0
+    assert result.z == 8.0
+
+
+def test_vec3_iscale_double():
+    a = Vec3(1.5, -2.5, 4.0)
+
+    lib.vec3_iscale(ctypes.byref(a), 2.0)
+
+    assert a.x == 3.0
+    assert a.y == -5.0
+    assert a.z == 8.0
+
+
+def test_vec3_scale_distributive():
+    # k*(a+b) == k*a + k*b
+    a = Vec3(1.0, 2.0, 3.0)
+    b = Vec3(4.0, -1.0, 2.0)
+    k = 3.0
+
+    lhs = lib.vec3_scale(lib.vec3_add(a, b), k)
+    rhs = lib.vec3_add(lib.vec3_scale(a, k), lib.vec3_scale(b, k))
+
+    assert lib.vec3_eq(lhs, rhs)
+
+
+def test_vec3_iscale_eq_to_scale():
+    a = Vec3(1.0, 2.0, 3.0)
+    b = Vec3(1.0, 2.0, 3.0)
+    k = 2.5
+
+    expected = lib.vec3_scale(a, k)
+    lib.vec3_iscale(ctypes.byref(b), k)
+
+    assert lib.vec3_eq(b, expected)
+
+
+# MUL (component-wise)
+def test_vec3_mul_basic():
+    a = Vec3(1.0, 2.0, 3.0)
+    b = Vec3(4.0, 5.0, 6.0)
+
+    result = lib.vec3_mul(a, b)
+
+    assert lib.vec3_eq(a, Vec3(1.0, 2.0, 3.0))
+    assert lib.vec3_eq(b, Vec3(4.0, 5.0, 6.0))
+    assert result.x == 4.0
+    assert result.y == 10.0
+    assert result.z == 18.0
+
+
+def test_vec3_imul_basic():
+    a = Vec3(1.0, 2.0, 3.0)
+    b = Vec3(4.0, 5.0, 6.0)
+
+    lib.vec3_imul(ctypes.byref(a), b)
+
+    assert a.x == 4.0
+    assert a.y == 10.0
+    assert a.z == 18.0
+    assert lib.vec3_eq(b, Vec3(4.0, 5.0, 6.0))
+
+
+def test_vec3_mul_zero():
+    a = Vec3(2.0, 3.0, 4.0)
+
+    result = lib.vec3_mul(a, VEC3_ZERO)
+
+    assert lib.vec3_eq(result, VEC3_ZERO)
+
+
+def test_vec3_imul_zero():
+    a = Vec3(2.0, 3.0, 4.0)
+
+    lib.vec3_imul(ctypes.byref(a), VEC3_ZERO)
+
+    assert lib.vec3_eq(a, VEC3_ZERO)
+
+
+def test_vec3_mul_identity():
+    a = Vec3(2.0, 3.0, 4.0)
+    ones = Vec3(1.0, 1.0, 1.0)
+
+    result = lib.vec3_mul(a, ones)
+
+    assert lib.vec3_eq(result, a)
+
+
+def test_vec3_imul_identity():
+    a = Vec3(2.0, 3.0, 4.0)
+    ones = Vec3(1.0, 1.0, 1.0)
+
+    lib.vec3_imul(ctypes.byref(a), ones)
+
+    assert lib.vec3_eq(a, Vec3(2.0, 3.0, 4.0))
+
+
+def test_vec3_mul_negative():
+    a = Vec3(2.0, -3.0, 4.0)
+    b = Vec3(-1.0, -1.0, 2.0)
+
+    result = lib.vec3_mul(a, b)
+
+    assert result.x == -2.0
+    assert result.y == 3.0
+    assert result.z == 8.0
+
+
+def test_vec3_imul_negative():
+    a = Vec3(2.0, -3.0, 4.0)
+    b = Vec3(-1.0, -1.0, 2.0)
+
+    lib.vec3_imul(ctypes.byref(a), b)
+
+    assert a.x == -2.0
+    assert a.y == 3.0
+    assert a.z == 8.0
+
+
+def test_vec3_mul_commutative():
+    a = Vec3(1.0, 2.0, 3.0)
+    b = Vec3(4.0, 5.0, 6.0)
+
+    result1 = lib.vec3_mul(a, b)
+    result2 = lib.vec3_mul(b, a)
+
+    assert result1.x == result2.x
+    assert result1.y == result2.y
+    assert result1.z == result2.z
+
+
+# NEG
+def test_vec3_neg_basic():
+    a = Vec3(1.0, -2.0, 3.0)
+
+    result = lib.vec3_neg(a)
+
+    assert a.x == 1.0
+    assert a.y == -2.0
+    assert a.z == 3.0
+
+    assert result.x == -1.0
+    assert result.y == 2.0
+    assert result.z == -3.0
+
+
+def test_vec3_neg_zero():
+    result = lib.vec3_neg(VEC3_ZERO)
+
+    assert lib.vec3_eq(result, VEC3_ZERO)
+
+
+def test_vec3_neg_double_negation():
+    a = Vec3(1.0, -2.0, 3.0)
+
+    result = lib.vec3_neg(lib.vec3_neg(a))
+
+    assert lib.vec3_eq(result, a)
+    
+def test_vec3_ineg_basic():
+    a = Vec3(1.0, -2.0, 3.0)
+
+    lib.vec3_ineg(ctypes.byref(a))
+
+    assert a.x == -1.0
+    assert a.y == 2.0
+    assert a.z == -3.0
+
+def test_vec3_ineg_zero():
+    a = Vec3(0.0, 0.0, 0.0)
+
+    lib.vec3_ineg(ctypes.byref(a))
+
+    assert lib.vec3_eq(a, VEC3_ZERO)
+
+def test_vec3_ineg_eq_to_neg():
+    a = Vec3(1.0, -2.0, 3.0)
+    b = Vec3(1.0, -2.0, 3.0)
+
+    expected = lib.vec3_neg(a)
+    lib.vec3_ineg(ctypes.byref(b))
+
+    assert lib.vec3_eq(b, expected)
+
+def test_vec3_ineg_double_negation():
+    a = Vec3(1.0, -2.0, 3.0)
+    original = Vec3(1.0, -2.0, 3.0)
+
+    lib.vec3_ineg(ctypes.byref(a))
+    lib.vec3_ineg(ctypes.byref(a))
+
+    assert lib.vec3_eq(a, original)

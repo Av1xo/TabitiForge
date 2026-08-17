@@ -10,6 +10,8 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
+option(TF_ENABLE_COVERAGE "Enable code coverage" OFF)
+
 # ===============================
 # CORE
 # ===============================
@@ -40,3 +42,21 @@ target_include_directories(tabitiforge
     PRIVATE
         ${PROJECT_SOURCE_DIR}/include
 )
+
+# ===============================
+# COVERAGE
+# ===============================
+
+
+if(TF_ENABLE_COVERAGE)
+    target_compile_options(tabitiforge_core PRIVATE
+        --coverage
+        -O0
+        -g
+        -fprofile-abs-path
+    )
+
+    target_link_options(tabitiforge_core PRIVATE
+        --coverage
+    )
+endif()

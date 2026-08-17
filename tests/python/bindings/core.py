@@ -8,7 +8,7 @@ from pathlib import Path
 import ctypes
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
-BUILD_DIR = ROOT_DIR / "build"
+BUILD_DIR = ROOT_DIR / "build-coverage"
 
 LIBRARY_PATH = BUILD_DIR / "libtabitiforge_core.so"
 

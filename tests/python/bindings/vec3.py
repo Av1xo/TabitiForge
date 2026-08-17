@@ -68,7 +68,7 @@ lib.vec3_nreflect.restype = Vec3
 lib.vec3_neg.argtypes = [Vec3]
 lib.vec3_neg.restype = Vec3
 
-lib.vec3_ineg.argtypes = [Vec3]
+lib.vec3_ineg.argtypes = [ctypes.POINTER(Vec3)]
 lib.vec3_ineg.restype = None
 
 lib.vec3_mul.argtypes = [Vec3, Vec3]
