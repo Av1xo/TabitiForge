@@ -20,11 +20,28 @@
 #ifndef TABITIFORGE_MATH_TYPES_H
 #define TABITIFORGE_MATH_TYPES_H
 
-// double (IEEE 754)
-#define TF_EPS_MATH   1e-15 // (~10*DBL_EPSILON)
-#define TF_EPS_LEN    1e-9  // det(M), normalize(vec)
-#define TF_EPS_LEN_SQ 1e-18 // (1e-9)^2
-#define TF_EPS_SQ     1e-12 // (len^2)
-#define TF_EPS_DENOM  1e-12 // (DivByZero guard)
+#include <float.h>
+
+/*
+ * Numerical tolerances for mathematical operations.
+ *
+ * These values are NOT physical constants.
+ * They define numerical decision thresholds only.
+ */
+
+/* Floating-point comparison / numerical noise. */
+#define TF_EPS_MATH (10.0 * DBL_EPSILON)
+
+/* Geometric zero threshold. */
+#define TF_EPS_LENGTH 1e-9
+
+/* Squared geometric zero threshold. */
+#define TF_EPS_LENGTH_SQ (TF_EPS_LENGTH * TF_EPS_LENGTH)
+
+/* Generic denominator guard. */
+#define TF_EPS_DENOM 1e-12
+
+/* Matrix determinant singularity threshold. */
+#define TF_EPS_DET 1e-12
 
 #endif // TABITIFORGE_MATH_TYPES_H

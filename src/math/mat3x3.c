@@ -142,7 +142,7 @@ Mat3x3 mat3x3_cofactor(Mat3x3 mat) {
 
 bool mat3x3_inv(Mat3x3 mat, Mat3x3 *out_inv) {
     double det = mat3x3_det(mat);
-    if (fabs(det) < TF_EPS_LEN) {
+    if (fabs(det) < TF_EPS_DET) {
         return false;
     }
 
@@ -170,7 +170,7 @@ Mat3x3 mat3x3_skew(Vec3 k) {
 
 Mat3x3 mat3x3_rotation(Vec3 k, double theta) {
     double len_sq = vec3_len2(k);
-    if (len_sq < TF_EPS_SQ)
+    if (len_sq < TF_EPS_LENGTH_SQ)
         return MAT3x3_IDENTITY;
 
     k = vec3_norm(k);

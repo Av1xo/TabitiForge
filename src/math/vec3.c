@@ -72,7 +72,7 @@ double vec3_len2(Vec3 v) {
 Vec3 vec3_norm(Vec3 v) {
     double l = vec3_len(v);
 
-    if (l <= TF_EPS_LEN)
+    if (l <= TF_EPS_LENGTH)
         return VEC3_ZERO;
 
     return vec3_scale(v, 1. / l);
@@ -81,7 +81,7 @@ Vec3 vec3_norm(Vec3 v) {
 void vec3_inorm(Vec3 *v) {
     double l = vec3_len(*v);
 
-    if (l <= TF_EPS_LEN)
+    if (l <= TF_EPS_LENGTH)
         return;
 
     vec3_iscale(v, 1. / l);
@@ -95,7 +95,7 @@ Vec3 vec3_proj(Vec3 a, Vec3 b) {
     double dot_prod_ab = vec3_dot(a, b);
     double len2_b = vec3_len2(b);
 
-    if (len2_b <= TF_EPS_SQ)
+    if (len2_b <= TF_EPS_LENGTH_SQ)
         return VEC3_ZERO;
 
     return vec3_scale(b, dot_prod_ab / len2_b);
@@ -139,7 +139,7 @@ Vec3 vec3_clamp(Vec3 v, double max_len) {
 
     double v_len = vec3_len(v);
 
-    if (v_len <= max_len || v_len <= TF_EPS_LEN)
+    if (v_len <= max_len || v_len <= TF_EPS_LENGTH)
         return v;
 
     double scale = max_len / v_len;
@@ -152,7 +152,7 @@ void vec3_iclamp(Vec3 *v, double max_len) {
 
     double v_len = vec3_len(*v);
 
-    if (v_len <= max_len || v_len <= TF_EPS_LEN)
+    if (v_len <= max_len || v_len <= TF_EPS_LENGTH)
         return;
 
     double scale = max_len / v_len;
@@ -202,7 +202,7 @@ void vec3_iabs(Vec3 *v) {
 }
 
 int vec3_eq(Vec3 a, Vec3 b) {
-    return vec3_len2(vec3_sub(a, b)) < TF_EPS_LEN_SQ;
+    return vec3_len2(vec3_sub(a, b)) < TF_EPS_LENGTH_SQ;
 }
 
 Vec3 vec3_rotate(Vec3 v, Vec3 k, double theta) {
