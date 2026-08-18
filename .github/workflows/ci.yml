@@ -1,0 +1,82 @@
+# Copyright (c) 2026 Rostyslav Zhurbenko, Valeriia Syrotenko
+# SPDX-License-Identifier: Apache-2.0
+
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-format:
+    name: Code Quality & Formatting Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y clang-format
+
+      - name: Install Linting & Formatting Tools
+        run: |
+          pip install reuse pre-commit ruff
+
+      - name: Run REUSE License Check
+        run: make license-check
+
+      - name: Run Clang-Format & Ruff Checks
+        run: make format-check
+
+      - name: Run Pre-commit Hooks
+        run: pre-commit run --all-files
+
+  build-and-test:
+    name: Build, Test & Sanitizers (GCC/Clang)
+    needs: lint-and-format
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y cmake build-essential gcovr clang-format
+          pip install pytest
+
+      - name: Build & Run Tests
+        env:
+          CC: ${{ matrix.compiler }}
+        run: |
+          make test
+
+      - name: Run Memory & UB Sanitizers (ASan + UBSan)
+        env:
+          CC: ${{ matrix.compiler }}
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+        run: |
+          make sanitize
+
+      - name: Generate Code Coverage
+        if: matrix.compiler == 'gcc'
+        run: |
+          make coverage
