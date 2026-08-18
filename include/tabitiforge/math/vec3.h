@@ -24,8 +24,7 @@
 extern "C" {
 #endif
 
-typedef struct
-{
+typedef struct {
     double x, y, z;
 } Vec3;
 
@@ -39,7 +38,6 @@ typedef struct
  * Zero vector
  */
 #define VEC3_ZERO ((Vec3){0., 0., 0.})
-
 
 /* Addition */
 Vec3 vec3_add(Vec3 a, Vec3 b);

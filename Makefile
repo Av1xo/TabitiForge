@@ -23,7 +23,8 @@ LICENSE_TYPE     := Apache-2.0
 
 .PHONY: configure build test run clean rebuild \
         coverage-configure coverage-build coverage-test coverage-report coverage \
-        license-check license-init annotate
+        license-check license-init annotate \
+		format format-check
 
 configure:
 	cmake -S . -B $(BUILD_DIR)
@@ -83,3 +84,13 @@ ifdef FILE
 else
 	@echo "Error: Enter file name. E.g.: make annotate FILE=src/math/matrix.c"
 endif
+
+# ==============================================================================
+# Code Formatting (clang-format)
+# ==============================================================================
+
+format:
+	@clang-format -i $$(find src include -name '*.c' -o -name '*.h')
+
+format-check:
+	@clang-format --dry-run --Werror $$(find src include -name '*.c' -o -name '*.h')

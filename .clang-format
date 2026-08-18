@@ -1,0 +1,20 @@
+# Copyright (c) 2026 Rostyslav Zhurbenko, Valeriia Syrotenko
+# SPDX-License-Identifier: Apache-2.0
+
+BasedOnStyle: LLVM
+Language: Cpp
+
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 100
+
+BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: Empty
+IndentCaseLabels: true
+
+PointerAlignment: Right
+
+AlignConsecutiveMacros: Consecutive
+AlignConsecutiveAssignments: None
+AlignTrailingComments: true
