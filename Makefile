@@ -17,12 +17,14 @@
 
 BUILD_DIR := build
 COVERAGE_BUILD_DIR := build-coverage
+SAN_BUILD_DIR := build-sanitize
 
 COPYRIGHT_HOLDER := Rostyslav Zhurbenko, Valeriia Syrotenko
 LICENSE_TYPE     := Apache-2.0
 
 .PHONY: configure build test run clean rebuild \
         coverage-configure coverage-build coverage-test coverage-report coverage \
+		sanitize-configure sanitize-build sanitize-test sanitize \
         license-check license-init annotate \
 		format format-check
 
@@ -39,7 +41,7 @@ run: build
 	./$(BUILD_DIR)/tabitiforge
 
 clean:
-	rm -rf $(BUILD_DIR) $(COVERAGE_BUILD_DIR)
+	rm -rf $(BUILD_DIR) $(COVERAGE_BUILD_DIR) $(SAN_BUILD_DIR)
 
 rebuild: clean build
 
@@ -94,3 +96,21 @@ format:
 
 format-check:
 	@clang-format --dry-run --Werror $$(find src include -name '*.c' -o -name '*.h')
+
+# ==============================================================================
+# Sanitizers (ASan + UBSan)
+# ==============================================================================
+
+sanitize-configure:
+	cmake -S . -B $(SAN_BUILD_DIR) \
+		-DCMAKE_BUILD_TYPE=Debug \
+		-DTF_ENABLE_SANITIZERS=ON
+
+sanitize-build: sanitize-configure
+	cmake --build $(SAN_BUILD_DIR)
+
+sanitize-test: sanitize-build
+	ctest --test-dir $(SAN_BUILD_DIR) --output-on-failure
+	pytest tests/python/tests
+
+sanitize: sanitize-test

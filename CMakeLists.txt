@@ -28,6 +28,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
 option(TF_ENABLE_COVERAGE "Enable code coverage" OFF)
+option(TF_ENABLE_SANITIZERS "Enable ASan and UBSan for memory and UB debugging" OFF)
 
 # ===============================
 # CORE
@@ -76,4 +77,27 @@ if(TF_ENABLE_COVERAGE)
     target_link_options(tabitiforge_core PRIVATE
         --coverage
     )
+endif()
+
+# ===============================
+# MEMORY SANITIZE
+# ===============================
+
+if(TF_ENABLE_SANITIZERS)
+    if(MSVC)
+        add_compile_options(/fsanitize=address)
+    else()
+        message(STATUS "Building with ASan and UBSan enabled")
+        
+        add_compile_options(
+            -fsanitize=address
+            -fsanitize=undefined
+            -fno-omit-frame-pointer
+            -g
+        )
+        add_link_options(
+            -fsanitize=address
+            -fsanitize=undefined
+        )
+    endif()
 endif()
