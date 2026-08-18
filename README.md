@@ -12,8 +12,7 @@ TabitiForge is an open-source project exploring molecular simulation,
 computational biology and artificial life from the lowest level.
 
 [![REUSE status](https://api.reuse.software/badge/github.com/Av1xo/TabitiForge)](https://api.reuse.software/info/github.com/Av1xo/TabitiForge)
-[![License](https://shields.io)](https://opensource.org)
-
+[![License](https://img.shields.io/badge/Apache_2.0-active-green.svg)](https://opensource.org/license/apache-2.0)
 ## Goals
 
 - Molecular representation
