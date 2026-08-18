@@ -27,6 +27,9 @@ class Vec3(ctypes.Structure):
         ("z", ctypes.c_double),
     ]
 
+    def __repr__(self):
+        return f"Vec3({self.x:.4f}, {self.y:.4f}, {self.z:.4f})"
+
 
 VEC3_ZERO = Vec3(0.0, 0.0, 0.0)
 

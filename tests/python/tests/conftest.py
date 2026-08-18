@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+
 PYTHON_DIR = Path(__file__).resolve().parents[1]
 
 if str(PYTHON_DIR) not in sys.path:

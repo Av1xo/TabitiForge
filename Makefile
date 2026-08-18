@@ -68,7 +68,9 @@ coverage-report: coverage-test
 		--root . \
 		--object-directory $(COVERAGE_BUILD_DIR) \
 		--filter 'src/.*\.c$$' \
-		--print-summary
+		--print-summary \
+		--exclude-unreachable-branches \
+		--exclude-throw-branches
 
 coverage: coverage-report
 

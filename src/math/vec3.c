@@ -135,7 +135,7 @@ void vec3_imul(Vec3 *a, Vec3 b) {
 }
 
 Vec3 vec3_clamp(Vec3 v, double max_len) {
-    assert(max_len >= 0 && "max_len must be non-negative");
+    assert(max_len >= 0 && "max_len must be non-negative"); // GCOVR_EXCL_LINE
 
     double v_len = vec3_len(v);
 
@@ -148,7 +148,7 @@ Vec3 vec3_clamp(Vec3 v, double max_len) {
 }
 
 void vec3_iclamp(Vec3 *v, double max_len) {
-    assert(max_len >= 0 && "max_len must be non-negative");
+    assert(max_len >= 0 && "max_len must be non-negative"); // GCOVR_EXCL_LINE
 
     double v_len = vec3_len(*v);
 
@@ -186,7 +186,7 @@ double vec3_angle_between(Vec3 a, Vec3 b) {
 
     double cos_theta = vec3_dot(a, b) / len_ab;
 
-    cos_theta = cos_theta < -1. ? -1. : cos_theta > 1. ? 1. : cos_theta;
+    cos_theta = fmax(-1.0, fmin(1.0, cos_theta));
 
     return acos(cos_theta);
 }
