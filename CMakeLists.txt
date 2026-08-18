@@ -30,8 +30,10 @@ set(CMAKE_C_EXTENSIONS OFF)
 option(TF_ENABLE_COVERAGE "Enable code coverage" OFF)
 option(TF_ENABLE_SANITIZERS "Enable ASan and UBSan for memory and UB debugging" OFF)
 
+find_library(MATH_LIBRARY m)
+
 # ===============================
-# CORE
+# CORE LIBRARY (tabitiforge_core)
 # ===============================
 
 add_library(tabitiforge_core SHARED
@@ -43,17 +45,17 @@ target_include_directories(tabitiforge_core
         ${PROJECT_SOURCE_DIR}/include
 )
 
+target_link_libraries(tabitiforge_core 
+    PRIVATE 
+        ${MATH_LIBRARY}
+)
+
 # ===============================
-# APPLICATION
+# APPLICATION EXECUTABLE (tabitiforge)
 # ===============================
 
 add_executable(tabitiforge
     src/main.c
-)
-
-target_link_libraries(tabitiforge
-    PRIVATE
-        tabitiforge_core
 )
 
 target_include_directories(tabitiforge
@@ -61,10 +63,14 @@ target_include_directories(tabitiforge
         ${PROJECT_SOURCE_DIR}/include
 )
 
-# ===============================
-# COVERAGE
-# ===============================
+target_link_libraries(tabitiforge 
+    PRIVATE 
+        tabitiforge_core
+)
 
+# ===============================
+# COVERAGE CONFIGURATION
+# ===============================
 
 if(TF_ENABLE_COVERAGE)
     target_compile_options(tabitiforge_core PRIVATE
@@ -80,7 +86,7 @@ if(TF_ENABLE_COVERAGE)
 endif()
 
 # ===============================
-# MEMORY SANITIZE
+# MEMORY & UB SANITIZERS
 # ===============================
 
 if(TF_ENABLE_SANITIZERS)
@@ -101,3 +107,19 @@ if(TF_ENABLE_SANITIZERS)
         )
     endif()
 endif()
+
+# ===============================
+# TESTING (CTest + pytest)
+# ===============================
+
+enable_testing()
+
+add_test(
+    NAME pytest_suite
+    COMMAND pytest tests/python/tests
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
+set_tests_properties(pytest_suite PROPERTIES
+    ENVIRONMENT "TABITIFORGE_LIB_PATH=$<TARGET_FILE:tabitiforge_core>"
+)

@@ -16,11 +16,32 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import ctypes
+import os
 from pathlib import Path
 
-ROOT_DIR = Path(__file__).resolve().parents[3]
-BUILD_DIR = ROOT_DIR / "build-coverage"
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
-LIBRARY_PATH = BUILD_DIR / "libtabitiforge_core.so"
+env_path = os.environ.get("TABITIFORGE_LIB_PATH")
+
+if env_path and Path(env_path).exists():
+    LIBRARY_PATH = Path(env_path)
+else:
+    candidate_paths = [
+        PROJECT_ROOT / "build" / "libtabitiforge_core.so",
+        PROJECT_ROOT / "build-coverage" / "libtabitiforge_core.so",
+        PROJECT_ROOT / "build-sanitize" / "libtabitiforge_core.so",
+    ]
+
+    LIBRARY_PATH = None
+    for path in candidate_paths:
+        if path.exists():
+            LIBRARY_PATH = path
+            break
+
+if not LIBRARY_PATH:
+    raise FileNotFoundError(
+        "Could not find libtabitiforge_core.so! "
+        "Build the project first or set TABITIFORGE_LIB_PATH."
+    )
 
 lib = ctypes.CDLL(str(LIBRARY_PATH))
