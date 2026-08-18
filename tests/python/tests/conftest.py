@@ -1,8 +1,5 @@
-#
-# Copyright 2026 Rostyslav Zhurbenko
-#
+# Copyright (c) 2026 Rostyslav Zhurbenko, Valeriia Syrotenko
 # SPDX-License-Identifier: Apache-2.0
-#
 
 import sys
 from pathlib import Path
