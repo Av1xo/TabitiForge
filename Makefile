@@ -58,10 +58,12 @@ coverage-build: coverage-configure
 	cmake --build $(COVERAGE_BUILD_DIR)
 
 coverage-test: coverage-build
+	find $(COVERAGE_BUILD_DIR) -name "*.gcda" -delete
+	TABITIFORGE_LIB_PATH="$(CURDIR)/$(COVERAGE_BUILD_DIR)/libtabitiforge_core.so" \
 	pytest tests/python/tests
 
 coverage-report: coverage-test
-	rm -rf $(COVERAGE_BUILD_DIR)/CMakeFiles/3.28.3/CompilerIdC
+	rm -rf $(COVERAGE_BUILD_DIR)/CMakeFiles/*/CompilerIdC
 	gcovr \
 		--root . \
 		--object-directory $(COVERAGE_BUILD_DIR) \

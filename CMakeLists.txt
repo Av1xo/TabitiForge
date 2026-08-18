@@ -38,10 +38,11 @@ find_library(MATH_LIBRARY m)
 
 add_library(tabitiforge_core SHARED
     src/math/vec3.c
+    src/math/mat3x3.c
 )
 
 target_include_directories(tabitiforge_core
-    PRIVATE
+    PUBLIC
         ${PROJECT_SOURCE_DIR}/include
 )
 
