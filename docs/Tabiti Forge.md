@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Rostyslav Zhurbenko, Valeriia Syrotenko
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 **Назва системи:** Дослідницько-інженерна платформа симуляції комплексних фізико-хімічних та біологічних систем «TabitiForge»
 
 **Код документа:** ТЗ-TF-2026-01

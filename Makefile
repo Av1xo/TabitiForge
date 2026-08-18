@@ -18,8 +18,12 @@
 BUILD_DIR := build
 COVERAGE_BUILD_DIR := build-coverage
 
+COPYRIGHT_HOLDER := Rostyslav Zhurbenko, Valeriia Syrotenko
+LICENSE_TYPE     := Apache-2.0
+
 .PHONY: configure build test run clean rebuild \
-        coverage-configure coverage-build coverage-test coverage-report coverage
+        coverage-configure coverage-build coverage-test coverage-report coverage \
+        license-check license-init annotate
 
 configure:
 	cmake -S . -B $(BUILD_DIR)
@@ -34,24 +38,24 @@ run: build
 	./$(BUILD_DIR)/tabitiforge
 
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) $(COVERAGE_BUILD_DIR)
 
 rebuild: clean build
 
+# ==============================================================================
+# Coverage
+# ==============================================================================
 
 coverage-configure:
 	cmake -S . -B $(COVERAGE_BUILD_DIR) \
 		-DCMAKE_BUILD_TYPE=Debug \
 		-DTF_ENABLE_COVERAGE=ON
 
-
 coverage-build: coverage-configure
 	cmake --build $(COVERAGE_BUILD_DIR)
 
-
 coverage-test: coverage-build
 	pytest tests/python/tests
-
 
 coverage-report: coverage-test
 	rm -rf $(COVERAGE_BUILD_DIR)/CMakeFiles/3.28.3/CompilerIdC
@@ -61,5 +65,21 @@ coverage-report: coverage-test
 		--filter 'src/.*\.c$$' \
 		--print-summary
 
-
 coverage: coverage-report
+
+# ==============================================================================
+# REUSE / License Management
+# ==============================================================================
+
+license-check:
+	@reuse lint
+
+license-init:
+	@reuse download $(LICENSE_TYPE)
+
+annotate:
+ifdef FILE
+	@reuse annotate --license $(LICENSE_TYPE) --copyright "$(COPYRIGHT_HOLDER)" $(FILE)
+else
+	@echo "Error: Enter file name. E.g.: make annotate FILE=src/math/matrix.c"
+endif

@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Rostyslav Zhurbenko, Valeriia Syrotenko
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # TabitiForge
 
 > Open molecular simulation and artificial life research platform.

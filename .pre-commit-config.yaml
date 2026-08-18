@@ -1,0 +1,8 @@
+# Copyright (c) 2026 Rostyslav Zhurbenko, Valeriia Syrotenko
+# SPDX-License-Identifier: Apache-2.0
+
+repos:
+  - repo: https://github.com/fsfe/reuse-tool
+    rev: v3.0.2
+    hooks:
+      - id: reuse
