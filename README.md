@@ -11,6 +11,8 @@ SPDX-License-Identifier: Apache-2.0
 TabitiForge is an open-source project exploring molecular simulation,
 computational biology and artificial life from the lowest level.
 
+[![REUSE status](https://api.reuse.software/badge/github.com/Av1xo/TabitiForge)](https://api.reuse.software/info/github.com/Av1xo/TabitiForge)
+
 ## Goals
 
 - Molecular representation
@@ -23,11 +25,10 @@ computational biology and artificial life from the lowest level.
 
 ## Current status
 
-🚧 Early development
+Early development
 
 Currently implementing the mathematical and molecular foundations
 of the simulation engine.
-
 
 ## USAGE
 - First run
