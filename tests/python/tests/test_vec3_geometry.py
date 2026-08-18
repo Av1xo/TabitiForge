@@ -5,8 +5,7 @@ import ctypes
 import math
 
 import pytest
-
-from bindings.vec3 import Vec3, lib, VEC3_ZERO
+from bindings.vec3 import VEC3_ZERO, Vec3, lib
 
 
 # DOT
@@ -154,7 +153,7 @@ def test_vec3_len2_equals_len_squared():
     len_result = lib.vec3_len(a)
     len2_result = lib.vec3_len2(a)
 
-    assert len2_result == pytest.approx(len_result ** 2)
+    assert len2_result == pytest.approx(len_result**2)
 
 
 # NORM / INORM
@@ -235,12 +234,14 @@ def test_vec3_inorm_zero_vector():
 
     assert lib.vec3_eq(a, VEC3_ZERO)
 
+
 def test_vec3_inorm_near_zero_vector():
     a = Vec3(1e-12, 0.0, 0.0)
 
     lib.vec3_inorm(ctypes.byref(a))
 
     assert a.x == pytest.approx(1e-12)
+
 
 def test_vec3_inorm_eq_to_norm():
     a = Vec3(1.0, 2.0, 3.0)
@@ -403,6 +404,7 @@ def test_vec3_reflect_normalizes_non_unit_normal():
     assert result.y == pytest.approx(expected.y)
     assert result.z == pytest.approx(expected.z)
 
+
 def test_vec3_nreflect_uses_normal_as_is():
     incident = Vec3(1.0, -1.0, 0.0)
     scaled_normal = Vec3(0.0, 5.0, 0.0)
@@ -416,6 +418,7 @@ def test_vec3_nreflect_uses_normal_as_is():
     assert result.y == pytest.approx(expected.y)
     assert result.z == pytest.approx(expected.z)
 
+
 def test_vec3_reflect_and_nreflect_diverge_for_non_unit_normal():
     incident = Vec3(1.0, -1.0, 0.0)
     scaled_normal = Vec3(0.0, 5.0, 0.0)
@@ -428,11 +431,8 @@ def test_vec3_reflect_and_nreflect_diverge_for_non_unit_normal():
 
 
 # ANGLE_BETWEEN
-def test_vec3_angle_between_zero_vector():
-    assert lib.vec3_angle_between(
-        Vec3(0, 0, 0),
-        Vec3(1, 0, 0)
-    ) == 0.0
+def test_vec3_angle_between_zero_vector_1():
+    assert lib.vec3_angle_between(Vec3(0, 0, 0), Vec3(1, 0, 0)) == 0.0
 
 
 def test_vec3_angle_between_orthogonal():
@@ -460,6 +460,7 @@ def test_vec3_angle_between_opposite_direction():
     result = lib.vec3_angle_between(a, b)
 
     assert result == pytest.approx(math.pi)
+
 
 def test_vec3_angle_between_zero_vector():
     a = Vec3(1.0, 2.0, 3.0)

@@ -3,7 +3,8 @@
 
 # EQ
 
-from bindings.vec3 import lib, Vec3, VEC3_ZERO
+from bindings.vec3 import VEC3_ZERO, Vec3, lib
+
 
 def test_vec3_eq_same():
     a = Vec3(1.0, 2.0, 3.0)
@@ -62,7 +63,8 @@ def test_vec3_eq_within_tolerance():
     result = lib.vec3_eq(a, b)
 
     assert result == 1
-    
+
+
 def test_vec3_eq_outside_tolerance():
     a = Vec3(1.0, 2.0, 3.0)
     b = Vec3(1.0 + 1e-8, 2.0, 3.0)

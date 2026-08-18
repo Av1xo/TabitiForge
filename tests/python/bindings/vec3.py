@@ -19,12 +19,14 @@ import ctypes
 
 from .core import lib
 
+
 class Vec3(ctypes.Structure):
     _fields_ = [
         ("x", ctypes.c_double),
         ("y", ctypes.c_double),
         ("z", ctypes.c_double),
     ]
+
 
 VEC3_ZERO = Vec3(0.0, 0.0, 0.0)
 

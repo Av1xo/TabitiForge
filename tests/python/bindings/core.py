@@ -15,8 +15,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from pathlib import Path
 import ctypes
+from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
 BUILD_DIR = ROOT_DIR / "build-coverage"

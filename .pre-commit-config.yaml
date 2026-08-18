@@ -12,3 +12,9 @@ repos:
       - id: clang-format
         types_or: [c, header]
         args: [-i]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.4
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format

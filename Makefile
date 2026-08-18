@@ -93,9 +93,13 @@ endif
 
 format:
 	@clang-format -i $$(find src include -name '*.c' -o -name '*.h')
+	@ruff check --fix tests/
+	@ruff format tests/
 
 format-check:
 	@clang-format --dry-run --Werror $$(find src include -name '*.c' -o -name '*.h')
+	@ruff check tests/
+	@ruff format --check tests/
 
 # ==============================================================================
 # Sanitizers (ASan + UBSan)

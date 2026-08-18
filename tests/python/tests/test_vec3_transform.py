@@ -5,8 +5,7 @@ import ctypes
 import math
 
 import pytest
-
-from bindings.vec3 import Vec3, lib, VEC3_ZERO
+from bindings.vec3 import VEC3_ZERO, Vec3, lib
 
 
 # ROTATE / NROTATE
@@ -122,7 +121,8 @@ def test_vec3_ilerp_clamps_t_above_one():
     lib.vec3_ilerp(ctypes.byref(a), b, 2.0)
 
     assert lib.vec3_eq(a, b)
-    
+
+
 def test_vec3_lerp_t_zero():
     a = Vec3(1.0, 2.0, 3.0)
     b = Vec3(5.0, 6.0, 7.0)
@@ -194,6 +194,7 @@ def test_vec3_ilerp_eq_to_lerp():
 
 # CLAMP / ICLAMP
 
+
 def test_vec3_clamp_near_zero_vector():
     v = Vec3(1e-12, 0.0, 0.0)
 
@@ -210,6 +211,7 @@ def test_vec3_iclamp_near_zero_vector():
     assert v.x == pytest.approx(1e-12)
     assert v.y == pytest.approx(0.0)
     assert v.z == pytest.approx(0.0)
+
 
 def test_vec3_clamp_within_limit_unchanged():
     a = Vec3(1.0, 0.0, 0.0)
@@ -284,6 +286,7 @@ def test_vec3_abs_each_component_branch():
         Vec3(1.0, 2.0, 3.0),
     )
 
+
 def test_vec3_iabs_each_component_branch():
     v = Vec3(-1.0, 2.0, 3.0)
     lib.vec3_iabs(ctypes.byref(v))
@@ -296,6 +299,7 @@ def test_vec3_iabs_each_component_branch():
     v = Vec3(1.0, 2.0, -3.0)
     lib.vec3_iabs(ctypes.byref(v))
     assert lib.vec3_eq(v, Vec3(1.0, 2.0, 3.0))
+
 
 def test_vec3_abs_basic():
     a = Vec3(-1.0, 2.0, -3.0)
