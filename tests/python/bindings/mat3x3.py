@@ -22,11 +22,11 @@ from .vec3 import Vec3
 
 
 class Mat3x3(ctypes.Union):
-    _fields_ = [
+    _fields_ = (
         ("m", (ctypes.c_double * 3) * 3),
         ("flat", ctypes.c_double * 9),
         ("row", Vec3 * 3),
-    ]
+    )
 
     def __init__(self, *args):
         super().__init__()

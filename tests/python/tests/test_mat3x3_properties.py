@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import math
-from hypothesis import given, strategies as st
+
 from bindings.mat3x3 import Mat3x3
 from bindings.vec3 import Vec3
+from hypothesis import given
+from hypothesis import strategies as st
 
 floats = st.floats(min_value=-1e3, max_value=1e3, allow_nan=False, allow_infinity=False)
 

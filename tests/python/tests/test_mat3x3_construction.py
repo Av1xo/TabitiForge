@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import math
-import pytest
 
+import pytest
 from bindings.mat3x3 import Mat3x3
 from bindings.vec3 import Vec3
 
