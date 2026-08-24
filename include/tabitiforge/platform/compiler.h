@@ -72,7 +72,7 @@
 #endif
 
 /* =========================================================================
- * PTR_SIZE DETECTION
+ * POINTER SIZE DETECTION
  * ========================================================================= */
 #define TF_PTR_BITS_32 32
 #define TF_PTR_BITS_64 64
@@ -82,13 +82,15 @@
 #define TF_PTR_BITS TF_PTR_BITS_64
 #elif __SIZEOF_POINTER__ == 4
 #define TF_PTR_BITS TF_PTR_BITS_32
+#else
+#error "Unsupported pointer width!"
 #endif
 #elif defined(_WIN64) || defined(__LP64__) || defined(_LP64)
 #define TF_PTR_BITS TF_PTR_BITS_64
 #elif defined(_WIN32)
 #define TF_PTR_BITS TF_PTR_BITS_32
 #else
-#error "Unsupported pointer width!"
+#error "Unable to determine pointer width!"
 #endif
 
 /* =========================================================================
@@ -109,11 +111,25 @@
 #define TF_ENDIAN_LITTLE 1
 #define TF_ENDIAN_BIG    2
 
-#if (defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)) ||                       \
-    defined(__BIG_ENDIAN__) || defined(_BIG_ENDIAN)
+#if defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__)
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
 #define TF_ENDIAN TF_ENDIAN_BIG
-#else
+#elif __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
 #define TF_ENDIAN TF_ENDIAN_LITTLE
+#else
+#error "Unsupported byte order!"
+#endif
+#elif defined(__BIG_ENDIAN__) || defined(_BIG_ENDIAN)
+#define TF_ENDIAN TF_ENDIAN_BIG
+#elif defined(__LITTLE_ENDIAN__) || defined(_LITTLE_ENDIAN)
+#define TF_ENDIAN TF_ENDIAN_LITTLE
+#elif defined(_WIN32)
+/*
+ * Windows targets supported by TabitiForge are little-endian.
+ */
+#define TF_ENDIAN TF_ENDIAN_LITTLE
+#else
+#error "Unable to determine endianness!"
 #endif
 
 /* =========================================================================
@@ -135,7 +151,7 @@
     defined(_M_X64)
 #define TF_SIMD_SSE2  1
 #define TF_SIMD_LEVEL 1
-#elif defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(_M_ARM64)
+#elif defined(__ARM_NEON) || defined(__ARM_NEON__) || defined(_M_ARM64) || defined(_M_ARM)
 #define TF_SIMD_NEON  1
 #define TF_SIMD_LEVEL 1
 #else
@@ -144,13 +160,13 @@
 #endif
 
 /* =========================================================================
- * ALIGNMENT & ATTRIBUTES
+ * SIMD ALIGNMENT
  * ========================================================================= */
 #if TF_SIMD_LEVEL >= 5
 #define TF_SIMD_ALIGNMENT 64
-#elif TF_SIMD_LEVEL >= 3 // AVX / AVX2
+#elif TF_SIMD_LEVEL >= 3 /* AVX / AVX2 */
 #define TF_SIMD_ALIGNMENT 32
-#elif TF_SIMD_LEVEL >= 1 // SSE / NEON
+#elif TF_SIMD_LEVEL >= 1 /* SSE / NEON */
 #define TF_SIMD_ALIGNMENT 16
 #else
 #define TF_SIMD_ALIGNMENT 8
@@ -184,10 +200,21 @@
 #if TF_BUILD == TF_DEBUG
 #if TF_COMPILER == TF_COMPILER_MSVC
 #define TF_DEBUG_BREAK() __debugbreak()
-#elif defined(__x86_64__) || defined(__i386__)
+#elif TF_ARCH == TF_ARCH_X64 || TF_ARCH == TF_ARCH_X86
+#if TF_COMPILER == TF_COMPILER_GCC || TF_COMPILER == TF_COMPILER_CLANG
 #define TF_DEBUG_BREAK() __asm__ volatile("int $3")
-#elif defined(__aarch64__) || defined(__arm__)
+#else
+#include <signal.h>
+#define TF_DEBUG_BREAK() raise(SIGTRAP)
+#endif
+#elif TF_ARCH == TF_ARCH_ARM64
+#if TF_COMPILER == TF_COMPILER_GCC || TF_COMPILER == TF_COMPILER_CLANG
 #define TF_DEBUG_BREAK() __asm__ volatile("brk #0xf000")
+#else
+#define TF_DEBUG_BREAK() __builtin_trap()
+#endif
+#elif TF_ARCH == TF_ARCH_ARM32
+#define TF_DEBUG_BREAK() __builtin_trap()
 #else
 #include <signal.h>
 #define TF_DEBUG_BREAK() raise(SIGTRAP)
@@ -246,4 +273,4 @@
 #define TF_C99_OR_GREATER (TF_C_VERSION >= 199901L)
 #define TF_C11_OR_GREATER (TF_C_VERSION >= 201112L)
 
-#endif // TABITIFORGE_PLATFORM_COMPILER_H
+#endif /* TABITIFORGE_PLATFORM_COMPILER_H */

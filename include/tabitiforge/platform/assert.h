@@ -23,19 +23,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "tabitiforge/platform/compiler.h"
 #include "tabitiforge/platform/types.h"
 
 /* =========================================================================
  * STATIC ASSERT
  * ========================================================================= */
 
-#define TF_STATIC_ASSERT(cond, msg) _Static_assert(cond, msg)
+/*
+ * Compile-time assertion.
+ *
+ * C11 _Static_assert is used directly because TabitiForge targets C11+.
+ */
+
+#define TF_STATIC_ASSERT(condition, message) _Static_assert((condition), message)
 
 /* =========================================================================
- * RUNTIME ASSERTS (DEBUG vs RELEASE)
+ * RUNTIME ASSERTS
  * ========================================================================= */
+
 #if TF_BUILD == TF_DEBUG
+
+/*
+ * Internal assertion failure handler.
+ *
+ * This macro prints diagnostic information, flushes stderr and
+ * triggers the platform/compiler-specific debugger break.
+ */
 
 #define TF_ASSERT_HALT(expr_str, file, line, msg_fmt, ...)                                         \
     do {                                                                                           \
@@ -44,10 +57,14 @@
                 "  Expression : %s\n"                                                              \
                 "  File       : %s:%d\n"                                                           \
                 "  Message    : " msg_fmt "\n\n",                                                  \
-                expr_str, file, line, ##__VA_ARGS__);                                              \
+                (expr_str), (file), (line), ##__VA_ARGS__);                                        \
         fflush(stderr);                                                                            \
         TF_DEBUG_BREAK();                                                                          \
     } while (0)
+
+/*
+ * Assertion with formatted diagnostic message.
+ */
 
 #define TF_ASSERT_MSG(condition, msg_fmt, ...)                                                     \
     do {                                                                                           \
@@ -56,13 +73,24 @@
         }                                                                                          \
     } while (0)
 
+/*
+ * Basic assertion without additional diagnostic information.
+ */
+
 #define TF_ASSERT(condition) TF_ASSERT_MSG(condition, "No details provided")
 
 #else
 
-#define TF_ASSERT(condition)               ((void)0)
-#define TF_ASSERT_MSG(condition, msg, ...) ((void)0)
+/*
+ * Assertions are completely disabled in release builds.
+ *
+ * Therefore the expression is not evaluated.
+ */
 
-#endif
+#define TF_ASSERT(condition) ((void)0)
 
-#endif // TABITIFORGE_PLATFORM_ASSERT_H
+#define TF_ASSERT_MSG(condition, msg_fmt, ...) ((void)0)
+
+#endif /* TF_BUILD == TF_DEBUG */
+
+#endif /* TABITIFORGE_PLATFORM_ASSERT_H */
