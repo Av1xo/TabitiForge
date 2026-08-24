@@ -39,6 +39,7 @@ find_library(MATH_LIBRARY m)
 add_library(tabitiforge_core SHARED
     src/math/vec3.c
     src/math/mat3x3.c
+    src/numeric/elementary.c
 )
 
 target_include_directories(tabitiforge_core
