@@ -20,31 +20,11 @@
 #ifndef TABITIFORGE_NUMERIC_COMPARE_H
 #define TABITIFORGE_NUMERIC_COMPARE_H
 
-#include <math.h>
 #include <stdbool.h>
 
+#include "tabitiforge/numeric/math.h"
 #include "tabitiforge/numeric/tolerance.h"
 #include "tabitiforge/numeric/types.h"
-
-/* ========================================================================= */
-/* SCALAR OPERATIONS                                                         */
-/* ========================================================================= */
-
-static inline real_t tf_abs(real_t x) {
-#if defined(TF_REAL_FLOAT32)
-    return fabsf(x);
-#elif defined(TF_REAL_FLOAT64)
-    return fabs(x);
-#endif
-}
-
-static inline real_t tf_max(real_t a, real_t b) {
-#if defined(TF_REAL_FLOAT32)
-    return fmaxf(a, b);
-#elif defined(TF_REAL_FLOAT64)
-    return fmax(a, b);
-#endif
-}
 
 /* ========================================================================= */
 /* ZERO PREDICATES                                                           */
@@ -76,6 +56,18 @@ static inline bool tf_is_close_ext(real_t a, real_t b, real_t abs_tol, real_t re
 
 static inline bool tf_is_close(real_t a, real_t b) {
     return tf_is_close_ext(a, b, TF_TOL_ABS, TF_TOL_REL);
+}
+
+static inline bool tf_is_inf(real_t x) {
+    return isinf(x);
+}
+
+static inline bool tf_is_nan(real_t x) {
+    return isnan(x);
+}
+
+static inline bool tf_is_finite(real_t x) {
+    return isfinite(x);
 }
 
 /* ========================================================================= */

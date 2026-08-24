@@ -22,7 +22,9 @@
 
 #include "tabitiforge/numeric/compare.h"
 #include "tabitiforge/numeric/constants.h"
+#include "tabitiforge/numeric/elementary.h"
 #include "tabitiforge/numeric/limits.h"
+#include "tabitiforge/numeric/math.h"
 #include "tabitiforge/numeric/tolerance.h"
 #include "tabitiforge/numeric/types.h"
 

@@ -201,4 +201,7 @@ _Static_assert(DBL_MIN_EXP == -1021, "TF_REAL_FLOAT64 requires binary64 exponent
 
 #endif
 
+#define TF_REAL_NAN      ((real_t)NAN)
+#define TF_REAL_INFINITY ((real_t)INFINITY)
+
 #endif /* TABITIFORGE_NUMERIC_TYPES_H */

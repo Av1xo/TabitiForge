@@ -21,6 +21,7 @@
 #include <math.h>
 
 #include "tabitiforge/numeric/constants.h"
+#include "tabitiforge/numeric/limits.h"
 #include "tabitiforge/numeric/types.h"
 
 /* ========================================================================= */
@@ -159,6 +160,30 @@ static inline real_t tf_log10(real_t x) {
 #endif
 }
 
+static inline real_t tf_fma(real_t x, real_t y, real_t z) {
+#if defined(TF_REAL_FLOAT32)
+    return fmaf(x, y, z);
+#elif defined(TF_REAL_FLOAT64)
+    return fma(x, y, z);
+#endif
+}
+
+static inline real_t tf_log1p(real_t x) {
+#if defined(TF_REAL_FLOAT32)
+    return log1pf(x);
+#elif defined(TF_REAL_FLOAT64)
+    return log1p(x);
+#endif
+}
+
+static inline real_t tf_expm1(real_t x) {
+#if defined(TF_REAL_FLOAT32)
+    return expm1f(x);
+#elif defined(TF_REAL_FLOAT64)
+    return expm1(x);
+#endif
+}
+
 /* ========================================================================= */
 /* ABS / SIGN / ROUNDING / REMAINDER                                         */
 /* ========================================================================= */
@@ -181,6 +206,10 @@ static inline int tf_sign(real_t x) {
     }
 
     return 0;
+}
+
+static inline real_t tf_sign_nz(real_t x) {
+    return (x >= (real_t)0) ? (real_t)1. : (real_t)-1.;
 }
 
 static inline real_t tf_copysign(real_t x, real_t y) {
@@ -353,6 +382,15 @@ static inline real_t tf_pingpong(real_t x, real_t length) {
     const real_t t = tf_repeat(x, period);
 
     return length - tf_abs(t - length);
+}
+
+static inline tf_u64 gcd_u64(tf_u64 a, tf_u64 b) {
+    while (b != TF_U64_MIN) {
+        tf_u64 temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
 }
 
 #endif /* TABITIFORGE_NUMERIC_MATH_H */

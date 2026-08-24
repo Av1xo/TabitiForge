@@ -21,7 +21,6 @@
 #define TABITIFORGE_NUMERIC_LIMITS_H
 
 #include <limits.h>
-#include <stddef.h>
 #include <stdint.h>
 
 #include "tabitiforge/numeric/types.h"
