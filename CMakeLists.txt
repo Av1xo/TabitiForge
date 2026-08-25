@@ -43,6 +43,7 @@ add_library(tabitiforge_core SHARED
     src/platform/cpu.c
     src/platform/os.c
     src/platform/timer.c
+    src/memory/memory.c
 )
 
 target_include_directories(tabitiforge_core

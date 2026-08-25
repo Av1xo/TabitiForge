@@ -261,6 +261,16 @@
 #endif
 #endif
 
+#if defined(TF_SHARED_LIB)
+#if defined(TF_EXPORT_SYMBOLS)
+#define TF_API TF_API_EXPORT
+#else
+#define TF_API TF_API_IMPORT
+#endif
+#else
+#define TF_API
+#endif
+
 /* =========================================================================
  * C STANDARD LEVEL DETECTION
  * ========================================================================= */
