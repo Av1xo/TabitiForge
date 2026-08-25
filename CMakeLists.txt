@@ -40,6 +40,9 @@ add_library(tabitiforge_core SHARED
     src/math/vec3.c
     src/math/mat3x3.c
     src/numeric/elementary.c
+    src/platform/cpu.c
+    src/platform/os.c
+    src/platform/timer.c
 )
 
 target_include_directories(tabitiforge_core
